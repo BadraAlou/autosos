@@ -1,0 +1,10 @@
+pip install channels
+pip install djangorestframework-simplejwt
+pip install djangorestframework 
+djangorestframework-simplejwt                      
+pip install mysqlclient
+pip install django-admin-interface
+pip install djangorestframework
+pip install django-filter
+pip install mysql-connector-python
+pipi install math
