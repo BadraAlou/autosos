@@ -1,5 +1,4 @@
 from rest_framework import serializers
-from rest_framework import serializers
 from .models import Client, Depanneur, Depannage, DemandeDepannage, Avis, DepanneurExterne, Paiement,Message
 from django.contrib.auth.models import User
 
@@ -56,14 +55,18 @@ class MessageSerializer(serializers.ModelSerializer):
 
 
 
+
+
 class DepannageSerializer(serializers.ModelSerializer):
     depanneur = DepanneurSerializer()  # Imbriqué
     depanneur_externe = DepanneurExterneSerializer(read_only=True)
-    created_at = serializers.DateTimeField(source='date_depannage', format="%Y-%m-%dT%H:%M:%SZ")
+    created_at = serializers.DateTimeField(source='date_depannage', format="%d/%m/%Y %H:%M" )
+
 
     class Meta:
         model = Depannage
         fields = '__all__'
+
 
         
 
@@ -76,9 +79,28 @@ class DemandeDepannageSerializer(serializers.ModelSerializer):
         
 
 class AvisSerializer(serializers.ModelSerializer):
+    client = serializers.SerializerMethodField()
+    depanneur = serializers.SerializerMethodField()
+
     class Meta:
         model = Avis
-        fields = '__all__'
+        fields = ['id', 'note', 'commentaire', 'date_avis', 'client', 'depanneur']
+
+    def get_client(self, obj):
+        return {
+            'username': obj.client.user.username,
+            'telephone': obj.client.telephone,
+            'adresse': obj.client.adresse,
+        }
+
+    def get_depanneur(self, obj):
+        depanneur = obj.depannage.depanneur
+        return {
+            'nom': depanneur.nom,
+            'expertise': depanneur.expertise,
+        }
+
+
 
 class PaiementSerializer(serializers.ModelSerializer):
     class Meta:

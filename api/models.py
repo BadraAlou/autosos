@@ -48,8 +48,10 @@ class Depannage(models.Model):
     TYPE_DEPANNAGE_CHOICES = [
         ('batterie', 'Batterie'),
         ('pneu', 'Pneu'),
-        ('mécanique', 'Mécanique'),
+        ('moteur', 'Moteur'),
         ('remorquage', 'Remorquage'),
+        ('simple', 'Simple'),
+        ('avec_reparation', 'Avec réparation'),
         ('autre', 'Autre'),
     
     ]
@@ -107,7 +109,7 @@ class DemandeDepannage(models.Model):
 
 # Avis
 class Avis(models.Model):
-    depannage = models.ForeignKey(Depannage, on_delete=models.CASCADE)
+    depannage = models.ForeignKey(Depannage, on_delete=models.CASCADE,related_name="avis")
     client = models.ForeignKey(Client, on_delete=models.CASCADE)
     note = models.IntegerField()
     commentaire = models.TextField(blank=True)
@@ -126,7 +128,3 @@ class Paiement(models.Model):
 
     def __str__(self):
         return f"Paiement de {self.depannage.client.user.username} - {self.montant} FCFA"
-
-
-
-
